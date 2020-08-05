@@ -2,17 +2,17 @@ export type Action =
     | {
         type: "CHANGE_INPUT";
         payload: {
-            NIP: number;
-            bankAcc: number;
-            fromDate: Date;
+            NIP: string;
+            bankAcc: string;
+            fromDate: string;
             captcha: boolean;
         }
     };
 
 export const initialState = {
-    NIP: 0,
-    bankAcc: 0,
-    fromDate: new Date(),
+    NIP: '',
+    bankAcc: '',
+    fromDate: new Date().toISOString().slice(0, 10),
     captcha: false
 }
 
