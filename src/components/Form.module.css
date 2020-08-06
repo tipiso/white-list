@@ -1,17 +1,27 @@
-.form{
+.form {
     display: flex;
     flex-wrap: wrap;
     color: white;
 }
 
-.formInput{
+.inputWrap {
     flex-basis: 100%;
-    padding: 13px;
     margin-bottom: 25px;
+}
+
+.formError {
+    font-size: 15px;
+    line-height: 18px;
+    color: #FF0000;
+}
+
+.formInput {
+    width: 100%;
+    padding: 13px;
     font-size: 20px;
 }
 
-.formButton{
+.formButton {
     flex-basis: 100%;
     font-size: 40px;
     font-weight: 600;
@@ -23,13 +33,13 @@
     cursor: pointer;
 }
 
-label.formInput{
+label.formInput {
     padding: 0;
     font-size: 15px;
     line-height: 18px;
 }
 
-label.decoratedFormInput{
+label.decoratedFormInput {
     display: inline-block;
     flex-basis: 100%;
     text-align: right;
@@ -38,10 +48,10 @@ label.decoratedFormInput{
     text-decoration: underline;
 }
 
-.formInput[type="file"]{
+.formInput[type="file"] {
     display: none;
 }
 
-.formInput::-webkit-file-upload-button{
+.formInput::-webkit-file-upload-button {
     display: none;
 }

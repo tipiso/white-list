@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppContext } from './Context';
+import { AppContext } from '../context/Context';
 import styles from './Form.module.css';
 import * as Yup from 'yup';
 import {
@@ -10,18 +10,26 @@ import {
 
 const InitialFormSchema = Yup.object().shape({
     NIP: Yup.string()
-    .test('len', 'Nieprawidłowy NIP (musi mieć 10 znaków)', val =>  val.length === 10)
-    .required('NIP wymagany'),
-    bankAcc: Yup.string()
-    .test('len', 'Nieprawidłowy numer konta (musi mieć 26 znaków)', val => val.length === 26)
-    .required('NIP wymagany'),
+        .test('len', 'Nieprawidłowy NIP (musi mieć 10 znaków)', val => {
+            if (val) {
+                return val.length === 10;
+            } else return false;
+        })
+        .required('NIP wymagany'),
+    // bankAcc: Yup.string()
+    //     .test('len', 'Nieprawidłowy numer konta (musi mieć 26 znaków)', val => {
+    //         if (val) {
+    //             return val.length === 26;
+    //         } else return false;
+    //     })
+    //     .required('Konto bankowe wymagane'),
     captcha: Yup.bool()
-    .required('Captcha jest wymagana'),
+        .required('Captcha jest wymagana'),
 });
 
-const InitialForm = () => {
+const InitialForm = (props: { handleSubmit: Function }) => {
     const { state, dispatch } = React.useContext(AppContext);
-  
+
     return (
         <Formik
             enableReinitialize={true}
@@ -30,23 +38,38 @@ const InitialForm = () => {
             initialValues={state}
             onSubmit={(values, actions) => {
                 dispatch({ type: 'CHANGE_INPUT', payload: { ...values } });
+                props.handleSubmit(values);
             }}
         >
-            {({handleChange, errors, touched}) => (
+            {({ handleChange, setFieldValue, values, handleBlur, errors, touched }) => (
                 <Form className={styles.form}>
-                    <Field required placeholder="numer NIP" type="text" className={styles.formInput} 
-                    onChange={handleChange} name="NIP">
-                    </Field>
-                    {errors.NIP && touched.NIP ? (<div>{errors.NIP}</div>) : null}
-                    <Field required className={styles.formInput} type="text" name="bankAcc" onChange={handleChange}>
-                    </Field>
-                    {errors.bankAcc && touched.bankAcc ? (<div>{errors.bankAcc}</div>) : null}
-                    <Field className={styles.formInput} type="date" name="fromDate" onChange={handleChange}></Field>
-                    <label className={styles.formInput}>
-                        Nie jestem robotem
+                    <div className={styles.inputWrap}>
+                        <Field required placeholder="numer NIP" type="text" className={styles.formInput}
+                            onChange={handleChange} name="NIP">
+                        </Field>
+                        {errors.NIP && touched.NIP ? (<div className={styles.formError}>{errors.NIP}</div>) : null}
+                    </div>
+                    <div className={styles.inputWrap}>
+                        <Field className={styles.formInput} type="text" name="bankAcc" 
+                        onBlur={(e: React.FormEvent<HTMLInputElement>) => {
+                            const val = values.bankAcc.replace(/\s/g, '');
+                            setFieldValue('bankAcc', val.trim());
+                            handleBlur(e);
+                        }} 
+                        onChange={handleChange}>
+                        </Field>
+                        {errors.bankAcc && touched.bankAcc ? (<div className={styles.formError}>{errors.bankAcc}</div>) : null}
+                    </div>
+                    <div className={styles.inputWrap}>
+                        <Field className={styles.formInput} type="date" name="fromDate" onChange={handleChange}></Field>
+                    </div>
+                    <div className={styles.inputWrap}>
+                        <label className={styles.formInput}>
+                            Nie jestem robotem
                         <Field required id="captcha" type="checkbox" name="captcha" onChange={handleChange}></Field>
-                    </label>
-                    {errors.captcha && touched.captcha ? (<div>{errors.captcha}</div>) : null}
+                        </label>
+                        {errors.captcha && touched.captcha ? (<div className={styles.formError}>{errors.captcha}</div>) : null}
+                    </div>
                     <button className={styles.formButton} type="submit">Sprawdź</button>
                     <label htmlFor="document" className={styles.decoratedFormInput}>Chcę sprawdzić fakturę z pliku
                     <Field className={styles.formInput} type="file" id="document" name="document" accept="image/png, image/jpeg"></Field>

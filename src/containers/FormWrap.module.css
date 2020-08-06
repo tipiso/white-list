@@ -1,0 +1,18 @@
+.Wrapper {
+    background-color: #839DA6;
+    max-width: 320px;
+    padding: 25px 22px 0 22px;
+    font-family: 'Oswald', sans-serif;
+    min-height: 568px;
+}
+
+.FormHeader{
+    width: 100%;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 40px;
+    text-align: left;
+    margin: 0;
+    margin-bottom: 25px;
+  }
