@@ -1,4 +1,10 @@
 export type Action =
+    |{
+        type: 'NIP_FOUND';
+        payload: {
+            response: object;
+        }
+    }
     | {
         type: "CHANGE_INPUT";
         payload: {
@@ -13,7 +19,8 @@ export const initialState = {
     NIP: '',
     bankAcc: '',
     fromDate: new Date().toISOString().slice(0, 10),
-    captcha: false
+    captcha: false,
+    response: {}
 }
 
 export type FormState = typeof initialState;
@@ -28,6 +35,11 @@ export const formReducer = (state: FormState, action: Action): FormState => {
                 bankAcc: action.payload.bankAcc,
                 fromDate: action.payload.fromDate,
                 captcha: action.payload.captcha,
+            };
+        case 'NIP_FOUND':
+            return{
+                ...state,
+                response: action.payload.response
             }
         default:
             return state;

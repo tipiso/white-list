@@ -44,19 +44,28 @@ const InitialForm = (props: { handleSubmit: Function }) => {
             {({ handleChange, setFieldValue, values, handleBlur, errors, touched }) => (
                 <Form className={styles.form}>
                     <div className={styles.inputWrap}>
-                        <Field required placeholder="numer NIP" type="text" className={styles.formInput}
+                        <Field
+                            disabled={(values.bankAcc ? 'disabled' : null)}
+                            placeholder="Numer NIP"
+                            maxLength="10"
+                            type="text"
+                            className={styles.formInput}
                             onChange={handleChange} name="NIP">
                         </Field>
                         {errors.NIP && touched.NIP ? (<div className={styles.formError}>{errors.NIP}</div>) : null}
                     </div>
                     <div className={styles.inputWrap}>
-                        <Field className={styles.formInput} type="text" name="bankAcc" 
-                        onBlur={(e: React.FormEvent<HTMLInputElement>) => {
-                            const val = values.bankAcc.replace(/\s/g, '');
-                            setFieldValue('bankAcc', val.trim());
-                            handleBlur(e);
-                        }} 
-                        onChange={handleChange}>
+                        <Field
+                            disabled={(values.NIP ? 'disabled' : null)}
+                            placeholder="Konto bankowe" className={styles.formInput}
+                            type="text"
+                            name="bankAcc"
+                            onBlur={(e: React.FormEvent<HTMLInputElement>) => {
+                                const val = values.bankAcc.replace(/\s/g, '');
+                                setFieldValue('bankAcc', val.trim());
+                                handleBlur(e);
+                            }}
+                            onChange={handleChange}>
                         </Field>
                         {errors.bankAcc && touched.bankAcc ? (<div className={styles.formError}>{errors.bankAcc}</div>) : null}
                     </div>
@@ -71,9 +80,6 @@ const InitialForm = (props: { handleSubmit: Function }) => {
                         {errors.captcha && touched.captcha ? (<div className={styles.formError}>{errors.captcha}</div>) : null}
                     </div>
                     <button className={styles.formButton} type="submit">Sprawdź</button>
-                    <label htmlFor="document" className={styles.decoratedFormInput}>Chcę sprawdzić fakturę z pliku
-                    <Field className={styles.formInput} type="file" id="document" name="document" accept="image/png, image/jpeg"></Field>
-                    </label>
                 </Form>
             )}
         </Formik>
