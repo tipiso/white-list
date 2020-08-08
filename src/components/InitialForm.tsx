@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppContext } from '../context/Context';
-import styles from './Form.module.css';
+import styles from './InitialForm.module.css';
 import * as Yup from 'yup';
 import {
     Formik,
@@ -86,4 +86,4 @@ const InitialForm = (props: { handleSubmit: Function }) => {
     );
 }
 
-export { InitialForm };
+export default  InitialForm;
