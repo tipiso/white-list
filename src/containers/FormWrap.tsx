@@ -72,7 +72,7 @@ export default function FormWrap() {
 
     return (
         <div className={styles.Wrapper}>
-            <h1 className={styles.FormHeader}>biała lista</h1>
+            <h1 onClick={() => window.location.reload()} className={styles.FormHeader}>biała lista</h1>
             {form}
         </div>
     )

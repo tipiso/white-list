@@ -9,6 +9,25 @@ import {
     Field,
 } from 'formik';
 
+const ReportFormSchema = Yup.object().shape({
+    buyerNIP: Yup.string()
+        .test('len', 'Nieprawidłowy NIP (musi mieć 10 znaków)', val => {
+            if (val) {
+                return val.length === 10;
+            } else return false;
+        })
+        .required('NIP wymagany'),
+    invoiceAcc: Yup.string()
+        .test('len', 'Nieprawidłowy numer konta (musi mieć 26 znaków)', val => {
+            if (val) {
+                return val.length === 26;
+            } else return false;
+        })
+        .required('Konto bankowe wymagane'),
+    // USemail: Yup.string()
+    //     .required('Wybierz docelowy urząd skarbowy')
+});
+
 export default function FormReport(props: { setFormStep: Function }) {
     const { state, dispatch } = React.useContext(AppContext);
 
@@ -28,17 +47,19 @@ export default function FormReport(props: { setFormStep: Function }) {
             </div>
             <Formik
                 enableReinitialize={true}
-                // validationSchema={InitialFormSchema}
+                validationSchema={ReportFormSchema}
                 validateOnChange={true}
                 initialValues={state}
                 onSubmit={(values, actions) => {
                     // dispatch({ type: 'CHANGE_INPUT', payload: { ...values } });
                     // props.handleSubmit(values);
+                    console.log(values, actions)
                 }}
             >
                 {({ handleChange, setFieldTouched, setFieldValue, values, handleBlur, errors, touched }) => (
                     <Form className={styles.form}>
                         <div className={styles.inputWrap}>
+                            <label className={styles.inputLabel}>Konto bankowe na fakturze</label>
                             <Field
                                 placeholder="Konto podane na fakturze" className={styles.formInput}
                                 type="text"
@@ -48,6 +69,7 @@ export default function FormReport(props: { setFormStep: Function }) {
                             {errors.bankAcc && touched.bankAcc ? (<div className={styles.formError}>{errors.bankAcc}</div>) : null}
                         </div>
                         <div className={styles.inputWrap}>
+                            <label className={styles.inputLabel}>NIP kupującego</label>
                             <Field
                                 placeholder="NIP kupującego" className={styles.formInput}
                                 type="text"
@@ -57,14 +79,16 @@ export default function FormReport(props: { setFormStep: Function }) {
                             {errors.bankAcc && touched.bankAcc ? (<div className={styles.formError}>{errors.bankAcc}</div>) : null}
                         </div>
                         <div className={styles.inputWrap}>
-                                <MultipleSelect  
-                                    onChange={setFieldValue}
-                                    onBlur={setFieldTouched}
-                                    value={values.US}
-                                    error={false}
-                                    touched={false}
-                                />
-                            {errors.bankAcc && touched.bankAcc ? (<div className={styles.formError}>{errors.bankAcc}</div>) : null}
+                            <label className={styles.inputLabel}>Urząd skarbowy</label>
+                            <MultipleSelect
+                                onChange={setFieldValue}
+                                onBlur={setFieldTouched}
+                                value={values.USemail}
+                                error={false}
+                                touched={false}
+                                name={'USemail'}
+                            />
+                            {errors.USemail && touched.USemail ? (<div className={styles.formError}>{errors.USemail}</div>) : null}
                         </div>
                         <button className={styles.formButton} type="submit">Sprawdź</button>
                     </Form>

@@ -25,8 +25,9 @@ export const initialState = {
     fromDate: new Date().toISOString().slice(0, 10),
     captcha: false,
     subject: {} as any,
-    US: '',
-    buyerNIP: ''
+    USemail: '',
+    buyerNIP: '',
+    invoiceAcc: ''
 }
 
 export type FormState = typeof initialState;
