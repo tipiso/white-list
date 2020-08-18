@@ -50,7 +50,8 @@ const InitialForm = (props: { handleSubmit: Function }) => {
                             maxLength="10"
                             type="text"
                             className={styles.formInput}
-                            onChange={handleChange} name="NIP">
+                            onChange={handleChange} 
+                            name="NIP">
                         </Field>
                         {errors.NIP && touched.NIP ? (<div className={styles.formError}>{errors.NIP}</div>) : null}
                     </div>

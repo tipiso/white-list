@@ -1,45 +1,54 @@
-import React from 'react'
+import React, {useState} from 'react'
 import USjson from '../assets/USjson.json';
-import Select from 'react-select';
+import Select, { OptionsType } from 'react-select';
 import styles from './MultipleSelect.module.css';
-  
-  const colourStyles = {
-    control: (styles:object) => ({ ...styles, backgroundColor: 'white' }),
-    option: (styles:object, { data, isDisabled, isFocused, isSelected } : any) => {
-      return {
-        ...styles,
-        backgroundColor: isDisabled ? null : isSelected ? data.color : isFocused ? '#839D11' : null,
-        color: isDisabled
-          ? '#ccc'
-          : isSelected
+
+const USObject: OptionsType<Object> = USjson['Arkusz1'];
+
+const colourStyles = {
+  control: (styles: object) => ({ ...styles, backgroundColor: 'white' }),
+  option: (styles: object, { data, isDisabled, isFocused, isSelected }: any) => {
+    return {
+      ...styles,
+      backgroundColor: isDisabled ? null : isSelected ? data.color : isFocused ? '#839D11' : null,
+      color: isDisabled
+        ? '#ccc'
+        : isSelected
           ? '#304F59'
           : '#000',
-      };
-    },
-  };
+    };
+  },
+};
 
 export default function MultipleSelect(props: { value: string, name: string, touched: Boolean, error: Boolean, onChange: Function, onBlur: Function }) {
-    const handleChange = (value: string) => {
-        props.onChange('USemail', value);
-    };
+  const [searchInput, handleSearchInput] = useState('');
 
-    const handleBlur = () => {
-        props.onBlur('USemail', true);
-    };
+  const handleChange = (value: any) => {
+    props.onChange('USemail', value['ADRES E-MAIL URZĘDU']);
+  };
 
-    return (
-        <Select
-            classNamePrefix={styles.customPrefix}
-            className={styles.customSelect}
-            styles={colourStyles}
-            getOptionLabel={option => `${option["NAZWA URZĘDU"]}`}
-            getOptionValue={option => `${option["ADRES E-MAIL URZĘDU"]}`}
-            options={USjson['Arkusz1']}
-            inputValue={props.value}
-            onInputChange={handleChange}
-            onBlur={handleBlur}
-            name={props.name}
-        >
-        </Select>
-    )
+  const handleInputChange = (value: string) => {
+    handleSearchInput(value);
+  }
+
+  const handleBlur = () => {
+    props.onBlur('USemail', true);
+  };
+
+  return (
+    <Select
+      classNamePrefix={styles.customPrefix}
+      className={styles.customSelect}
+      styles={colourStyles}
+      getOptionLabel={(option: any) => `${option["NAZWA URZĘDU"]}`}
+      getOptionValue={(option: any) => `${option["ADRES E-MAIL URZĘDU"]}`}
+      options={USObject}
+      inputValue={searchInput}
+      onInputChange={handleInputChange}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      name={props.name}
+    >
+    </Select>
+  )
 }

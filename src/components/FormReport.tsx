@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FormEvent } from 'react'
 import { AppContext } from '../context/Context';
 import MultipleSelect from './MultipleSelect';
 import styles from './InitialForm.module.css';
@@ -24,13 +24,19 @@ const ReportFormSchema = Yup.object().shape({
             } else return false;
         })
         .required('Konto bankowe wymagane'),
-    // USemail: Yup.string()
-    //     .required('Wybierz docelowy urząd skarbowy')
+    USemail: Yup.string()
+        .required('test')
 });
 
 export default function FormReport(props: { setFormStep: Function }) {
     const { state, dispatch } = React.useContext(AppContext);
-
+    // disabled={(values.bankAcc ? 'disabled' : null)}
+    // placeholder="Numer NIP"
+    // maxLength="10"
+    // type="text"
+    // className={styles.formInput}
+    // onChange={handleChange} 
+    // name="NIP">
     return (
         <>
             <div className={`${styles.inputWrap} ${styles.withLabel}`}>
@@ -47,7 +53,7 @@ export default function FormReport(props: { setFormStep: Function }) {
             </div>
             <Formik
                 enableReinitialize={true}
-                validationSchema={ReportFormSchema}
+                // validationSchema={ReportFormSchema}    
                 validateOnChange={true}
                 initialValues={state}
                 onSubmit={(values, actions) => {
@@ -72,6 +78,7 @@ export default function FormReport(props: { setFormStep: Function }) {
                             <label className={styles.inputLabel}>NIP kupującego</label>
                             <Field
                                 placeholder="NIP kupującego" className={styles.formInput}
+                                maxLength="10"
                                 type="text"
                                 name="buyerNIP"
                                 onChange={handleChange}>
