@@ -6,7 +6,7 @@
     min-height: 568px;
 }
 
-.FormHeader{
+.FormHeader {
     width: 100%;
     color: white;
     text-transform: uppercase;
@@ -15,4 +15,11 @@
     text-align: left;
     margin: 0;
     margin-bottom: 25px;
-  }
+}
+
+.formError {
+    text-align: center;
+    font-size: 15px;
+    line-height: 18px;
+    color: #FF0000;
+}

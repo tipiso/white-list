@@ -16,6 +16,7 @@ const api = prodApi;
 export default function FormWrap() {
     const { state, dispatch } = React.useContext(AppContext);
     const [formStep, setFormStep] = useState(1);
+    const [ajaxError, setAjaxError] = useState(false);
 
     const handleSubmit = (data: FormState): void => {
         const { NIP, bankAcc, fromDate } = data;
@@ -29,9 +30,9 @@ export default function FormWrap() {
                         }
                     });
                     if (response.status === 200) {
-                        const { subject } = response.data.result;
-                        console.log(subject, response.data.result)
-                        dispatch({ type: 'SET_COMPANY_DATA', payload: { subject: { ...subject } } });
+                        const { subjects } = response.data.result;
+                        console.log(subjects, response.data.result)
+                        dispatch({ type: 'SET_COMPANY_DATA', payload: { subject: { ...subjects[0] } } });
                         setFormStep(2);
                     }
                 } else if (NIP) {
@@ -49,6 +50,7 @@ export default function FormWrap() {
                 }
             } catch (error) {
                 console.log(error);
+                setAjaxError(true);
             }
         }
         getData();
@@ -74,6 +76,7 @@ export default function FormWrap() {
         <div className={styles.Wrapper}>
             <h1 onClick={() => window.location.reload()} className={styles.FormHeader}>biała lista</h1>
             {form}
+            {ajaxError ? <div className={styles.formError}>Nie znaleziono działalności gospodarczej o wpisanych danych</div> : null}
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import USjson from '../assets/USjson.json';
 import Select, { OptionsType } from 'react-select';
 import styles from './MultipleSelect.module.css';
@@ -6,16 +6,30 @@ import styles from './MultipleSelect.module.css';
 const USObject: OptionsType<Object> = USjson['Arkusz1'];
 
 const colourStyles = {
-  control: (styles: object) => ({ ...styles, backgroundColor: 'white' }),
+  control: (styles: object) => (
+    {
+      ...styles,
+      backgroundColor: 'white',
+      '&:hover': {
+        borderColor: '#839DA6'
+      }
+    }),
   option: (styles: object, { data, isDisabled, isFocused, isSelected }: any) => {
     return {
       ...styles,
-      backgroundColor: isDisabled ? null : isSelected ? data.color : isFocused ? '#839D11' : null,
+      backgroundColor:
+        isDisabled ? null : isSelected
+          ? data.color : isFocused
+            ? '#839D11' : null,
       color: isDisabled
         ? '#ccc'
         : isSelected
-          ? '#304F59'
+          ? '#839DA6'
           : '#000',
+      '&:hover': {
+        backgroundColor: '#839DA6',
+        color: '#fff',
+      },
     };
   },
 };

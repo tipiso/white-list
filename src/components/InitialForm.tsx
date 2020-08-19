@@ -10,19 +10,21 @@ import {
 
 const InitialFormSchema = Yup.object().shape({
     NIP: Yup.string()
-        .test('len', 'Nieprawidłowy NIP (musi mieć 10 znaków)', val => {
-            if (val) {
+        .test('len', 'Nieprawidłowy NIP (musi mieć 10 znaków)', function (val) {
+            const { bankAcc } = this.parent;
+            if (!bankAcc && val) {
                 return val.length === 10;
-            } else return false;
+            } else return true;
         })
-        .required('NIP wymagany'),
-    // bankAcc: Yup.string()
-    //     .test('len', 'Nieprawidłowy numer konta (musi mieć 26 znaków)', val => {
-    //         if (val) {
-    //             return val.length === 26;
-    //         } else return false;
-    //     })
-    //     .required('Konto bankowe wymagane'),
+    ,
+    bankAcc: Yup.string()
+        .test('len', 'Nieprawidłowy numer konta (musi mieć 26 znaków)', function (val) {
+            const {NIP} = this.parent;
+            if (!NIP && val) {
+                return val.length === 26;
+            } else return true;
+        })
+    ,
     captcha: Yup.bool()
         .required('Captcha jest wymagana'),
 });
@@ -50,7 +52,7 @@ const InitialForm = (props: { handleSubmit: Function }) => {
                             maxLength="10"
                             type="text"
                             className={styles.formInput}
-                            onChange={handleChange} 
+                            onChange={handleChange}
                             name="NIP">
                         </Field>
                         {errors.NIP && touched.NIP ? (<div className={styles.formError}>{errors.NIP}</div>) : null}
@@ -59,13 +61,9 @@ const InitialForm = (props: { handleSubmit: Function }) => {
                         <Field
                             disabled={(values.NIP ? 'disabled' : null)}
                             placeholder="Konto bankowe" className={styles.formInput}
+                            maxLength="26"
                             type="text"
                             name="bankAcc"
-                            onBlur={(e: React.FormEvent<HTMLInputElement>) => {
-                                const val = values.bankAcc.replace(/\s/g, '');
-                                setFieldValue('bankAcc', val.trim());
-                                handleBlur(e);
-                            }}
                             onChange={handleChange}>
                         </Field>
                         {errors.bankAcc && touched.bankAcc ? (<div className={styles.formError}>{errors.bankAcc}</div>) : null}
@@ -87,4 +85,4 @@ const InitialForm = (props: { handleSubmit: Function }) => {
     );
 }
 
-export default  InitialForm;
+export default InitialForm;

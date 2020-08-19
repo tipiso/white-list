@@ -1,6 +1,7 @@
-import React, { FormEvent } from 'react'
+import React from 'react';
 import { AppContext } from '../context/Context';
 import MultipleSelect from './MultipleSelect';
+import emailjs from 'emailjs-com';
 import styles from './InitialForm.module.css';
 import * as Yup from 'yup';
 import {
@@ -25,18 +26,31 @@ const ReportFormSchema = Yup.object().shape({
         })
         .required('Konto bankowe wymagane'),
     USemail: Yup.string()
-        .required('test')
+        .required('Musisz wybrać placówkę Urzędu Skarbowego')
 });
 
 export default function FormReport(props: { setFormStep: Function }) {
     const { state, dispatch } = React.useContext(AppContext);
-    // disabled={(values.bankAcc ? 'disabled' : null)}
-    // placeholder="Numer NIP"
-    // maxLength="10"
-    // type="text"
-    // className={styles.formInput}
-    // onChange={handleChange} 
-    // name="NIP">
+
+    const sendReport = (values:{buyerNIP:string, invoiceAcc:string, USemail: string}) => {
+        const {buyerNIP, invoiceAcc, USemail} = values;
+
+        emailjs.send(
+            'gmail', 'template_ekypNj24',
+            {reported_address: state.subject['residenceAddress'], 
+            reported_name: state.subject['name'], 
+            reported_nip: state.subject['nip'], 
+            from_name: 'White List App',
+            sender_nip: buyerNIP, 
+            unknown_account: invoiceAcc,
+            us_email: USemail,
+            to: 'tipiso@gmail.com', },
+            'user_vt01ILrY5egqgNp7N7ssP'
+        ).then(res => {
+            console.log('success');
+        });
+    }
+
     return (
         <>
             <div className={`${styles.inputWrap} ${styles.withLabel}`}>
@@ -53,13 +67,14 @@ export default function FormReport(props: { setFormStep: Function }) {
             </div>
             <Formik
                 enableReinitialize={true}
-                // validationSchema={ReportFormSchema}    
+                validationSchema={ReportFormSchema}
                 validateOnChange={true}
                 initialValues={state}
                 onSubmit={(values, actions) => {
                     // dispatch({ type: 'CHANGE_INPUT', payload: { ...values } });
                     // props.handleSubmit(values);
-                    console.log(values, actions)
+                    console.log(values, actions);
+                    sendReport(values);
                 }}
             >
                 {({ handleChange, setFieldTouched, setFieldValue, values, handleBlur, errors, touched }) => (
@@ -70,9 +85,10 @@ export default function FormReport(props: { setFormStep: Function }) {
                                 placeholder="Konto podane na fakturze" className={styles.formInput}
                                 type="text"
                                 name="invoiceAcc"
+                                maxLength="26"
                                 onChange={handleChange}>
                             </Field>
-                            {errors.bankAcc && touched.bankAcc ? (<div className={styles.formError}>{errors.bankAcc}</div>) : null}
+                            {errors.invoiceAcc && touched.invoiceAcc ? (<div className={styles.formError}>{errors.invoiceAcc}</div>) : null}
                         </div>
                         <div className={styles.inputWrap}>
                             <label className={styles.inputLabel}>NIP kupującego</label>
@@ -83,7 +99,7 @@ export default function FormReport(props: { setFormStep: Function }) {
                                 name="buyerNIP"
                                 onChange={handleChange}>
                             </Field>
-                            {errors.bankAcc && touched.bankAcc ? (<div className={styles.formError}>{errors.bankAcc}</div>) : null}
+                            {errors.buyerNIP && touched.buyerNIP ? (<div className={styles.formError}>{errors.buyerNIP}</div>) : null}
                         </div>
                         <div className={styles.inputWrap}>
                             <label className={styles.inputLabel}>Urząd skarbowy</label>
